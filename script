@@ -1,0 +1,52 @@
+function GeneratePossibilities() {
+  var ss = SpreadsheetApp.getActive();
+  var sheet = ss.getSheetByName("Sheet1");
+  var range = sheet.getRange("A3:O99").getValues();
+  
+  var items = [];
+  for (var j=0; j<range[0].length; j++) {
+    if (range[0][j]!="") {
+      items.push([range[0][j]]);
+    } else {
+      break;
+    }
+  }
+      
+      
+  for (var i=1; i<range.length; i++) {
+    for (var j=0; j<items.length; j++) {
+      if (range[i][j]!="") {
+        items[j].push(range[i][j]);
+      }
+    }
+  }
+  
+  var numOfPos = 1;
+  var possibilities = [];
+  var temp = [];
+  var k=0;
+  
+  for (i=0; i<items[0].length; i++) {
+    possibilities.push([items[0][i]]);
+  }
+  numOfPos = numOfPos*items[0].length;
+
+  for (i=1; i<items.length; i++) {
+    numOfPos = numOfPos*items[i].length;
+    temp = possibilities;
+    possibilities = [];
+    for (j=0; j<items[i].length; j++) {
+      for (k=0; k<temp.length; k++) {
+        possibilities.push(temp[k].slice(0));
+      }
+    }
+    for (var k=0; k<numOfPos; k++) {
+      var mathzzz = Math.floor(k/(numOfPos/items[i].length));
+      possibilities[k].push(items[i][Math.floor(k/(numOfPos/items[i].length))]);
+    }
+  }
+  var sheet2 = ss.getSheetByName("Sheet2");
+  var range2 = sheet2.getRange(2, 1, numOfPos, items.length);
+  range2.setValues(possibilities);
+      
+}
